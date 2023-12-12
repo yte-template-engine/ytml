@@ -1,0 +1,72 @@
+name: CI
+
+on: [push]
+
+jobs:
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Setup poetry
+        run: pip install poetry
+
+      - name: Install Dependencies using Poetry
+        run: poetry install
+
+      - name: Check formatting
+        run: poetry run black --check .
+
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Setup poetry
+        run: pip install poetry
+
+      - name: Install Dependencies using Poetry
+        run: poetry install
+
+      - name: Check code
+        run: poetry run flake8
+
+  testing:
+    needs:
+      - formatting
+      - linting
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.7", "3.9", "3.10"]
+        poetry-version: ["1.1"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Setup poetry
+        run: pip install poetry
+
+      - name: Install Dependencies using Poetry
+        run: poetry install
+
+      - name: Run pytest
+        run: poetry run coverage run -m pytest tests.py
+
+      - name: Run Coverage
+        run: poetry run coverage report -m
