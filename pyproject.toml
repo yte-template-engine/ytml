@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "ytml"
+version = "0.1.0"
+description = "A YAML based HTML templating engine"
+authors = ["Johannes Koester <johannes.koester@uni-due.de>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+yte = "^1.5.4"
+markdown = "^3.5.1"
+html5print = "^0.1.2"
+plac = "^1.4.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+black = "^23.11.0"
+flake8 = "^6.1.0"
+coverage = "^7.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+ytml = "ytml:main"
