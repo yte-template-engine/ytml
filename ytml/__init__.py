@@ -1,14 +1,10 @@
 from dataclasses import dataclass
 import os
 from pathlib import Path
-import shutil
-import sys
 from typing import Dict, Optional
 from urllib.parse import urlparse
 from xml.etree import ElementTree
 
-from bs4 import BeautifulSoup
-from requests import request
 import requests
 from yte import process_yaml
 from markdown import markdown
@@ -27,7 +23,11 @@ class NodeProcessor:
         with open(self.base_dir / path, "r") as f:
             code = f.read()
         html = self.process_code(code, toplevel=toplevel)
-        target_path = self.target_dir / path.parent / Path(Path(path.stem).stem).with_suffix(".html")
+        target_path = (
+            self.target_dir
+            / path.parent
+            / Path(Path(path.stem).stem).with_suffix(".html")
+        )
         target_path.parent.mkdir(parents=True, exist_ok=True)
         with open(target_path, "w") as f:
             f.write(html)
@@ -35,7 +35,7 @@ class NodeProcessor:
     def process_code(self, code, toplevel: bool = True):
         root = process_yaml(code, require_use_yte=True, variables=self.config)
         processed = self._process_node(root)
-        html = ''.join(processed)
+        html = "".join(processed)
         if toplevel:
             return f"<!DOCTYPE html>{html}"
         else:
@@ -46,7 +46,9 @@ class NodeProcessor:
             raise ValueError("html node may not have any siblings")
 
         if isinstance(node, list):
-            yield "".join(subitem for item in node for subitem in self._process_node(item))
+            yield "".join(
+                subitem for item in node for subitem in self._process_node(item)
+            )
         elif isinstance(node, dict):
             for tag, value in node.items():
                 if tag == "markdown":
@@ -70,12 +72,11 @@ class NodeProcessor:
                         yield f"<{' '.join(tag_items)} />"
                     else:
                         yield f"<{' '.join(tag_items)}></{tag}>"
-                    
+
         elif isinstance(node, str):
             yield node
         else:
             raise ValueError(f"unknown node type: {type(node)}")
-
 
     def _render_file(self, node_value):
         if "url" in node_value:
@@ -102,13 +103,14 @@ class NodeProcessor:
             else:
                 raise ValueError("inline: true is only supported for SVG files")
         elif "class" in node_value:
-            raise ValueError("class is only supported for inline SVG files (inline: true)")
+            raise ValueError(
+                "class is only supported for inline SVG files (inline: true)"
+            )
         else:
             target_path = self.target_dir / path
             with open(target_path, "wb") as f:
                 f.write(content)
             return path
-
 
     def _render_attributes(self, node_value):
         for key, value in node_value.items():
@@ -126,14 +128,12 @@ class NodeProcessor:
                     raise ValueError(f"Invalid attribute: {value}")
             yield f'{key}="{value}"'
 
+
 @plac.pos(
     "base_dir",
-    help="Base directory to which all given paths are considered to be relative."
+    help="Base directory to which all given paths are considered to be relative.",
 )
-@plac.pos(
-    "target_dir",
-    help="Target directory to which all files will be written"
-)
+@plac.pos("target_dir", help="Target directory to which all files will be written")
 @plac.pos(
     "config",
     help="Path to a .yaml file that will be used to template the processing with YTE.",
@@ -148,8 +148,7 @@ def cli(
     config,
     *paths,
 ):
-    """Process .ytml.yaml files into .html files.
-    """
+    """Process .ytml.yaml files into .html files."""
     base_dir = Path(base_dir)
     target_dir = Path(target_dir)
     if config is not None:
