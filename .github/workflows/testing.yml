@@ -66,7 +66,7 @@ jobs:
         run: poetry install
 
       - name: Run pytest
-        run: poetry run coverage run -m pytest tests.py
+        run: poetry run coverage run -m pytest tests/tests.py
 
       - name: Run Coverage
         run: poetry run coverage report -m
