@@ -16,6 +16,7 @@ class NodeProcessor:
     base_dir: Path
     target_dir: Path
     config: Optional[Dict] = None
+    config_dir: Optional[Path] = None
 
     def process_file(self, path: Path, toplevel: bool = True):
         if path.suffixes != [".ytml", ".yaml"] and path.suffix != [".yhtml", ".yml"]:
@@ -33,7 +34,11 @@ class NodeProcessor:
             f.write(html)
 
     def process_code(self, code, toplevel: bool = True):
-        root = process_yaml(code, require_use_yte=True, variables=self.config)
+        root = process_yaml(
+            code,
+            require_use_yte=True,
+            variables={"config": self.config, "config_dir": self.config_dir},
+        )
         processed = self._process_node(root)
         html = "".join(processed)
         if toplevel:
@@ -153,10 +158,14 @@ def cli(
     """Process .ytml.yaml files into .html files."""
     base_dir = Path(base_dir)
     target_dir = Path(target_dir)
+    config_dir = None
     if config is not None:
+        config_dir = Path(config).parent
         with open(config, "r") as f:
             config = process_yaml(f, require_use_yte=True)
-    processor = NodeProcessor(base_dir, target_dir, config=config)
+    processor = NodeProcessor(
+        base_dir, target_dir, config=config, config_dir=config_dir
+    )
     for path in paths:
         processor.process_file(Path(path))
 
