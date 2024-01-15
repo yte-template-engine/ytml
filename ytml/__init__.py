@@ -85,7 +85,9 @@ class NodeProcessor:
             content = requests.get(url).content
             path = os.path.basename(parsed.path)
         else:
-            src_path = self.base_dir / node_value["path"]
+            src_path = node_value["path"]
+            if not os.path.isabs(src_path):
+                src_path = self.base_dir / src_path
             with open(src_path, "rb") as f:
                 content = f.read()
             path = node_value["path"]
