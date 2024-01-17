@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from typing import Dict, Optional
 from urllib.parse import urlparse
+import uuid
 from xml.etree import ElementTree
 
 import requests
@@ -114,10 +115,11 @@ class NodeProcessor:
                 "class is only supported for inline SVG files (inline: true)"
             )
         else:
-            target_path = self.target_dir / path
+            name = uuid.uuid4(path)
+            target_path = self.target_dir / name
             with open(target_path, "wb") as f:
                 f.write(content)
-            return path
+            return name
 
     def _render_attributes(self, node_value):
         for key, value in node_value.items():
