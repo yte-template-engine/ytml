@@ -116,7 +116,7 @@ class NodeProcessor:
                 "class is only supported for inline SVG files (inline: true)"
             )
         else:
-            name = hashlib.sha256(path).hexdigest() + path.suffix
+            name = hashlib.sha256(path).hexdigest() + Path(path).suffix
             target_path = self.target_dir / name
             with open(target_path, "wb") as f:
                 f.write(content)
