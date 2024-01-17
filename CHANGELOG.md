@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/yte-template-engine/ytml/compare/v1.0.1...v1.0.2) (2024-01-17)
+
+
+### Bug Fixes
+
+* fix file naming ([c040e48](https://github.com/yte-template-engine/ytml/commit/c040e48c86e08eddee28e17300cbfc1eb32bfbe0))
+
 ## [1.0.1](https://github.com/yte-template-engine/ytml/compare/v1.0.0...v1.0.1) (2024-01-17)
 
 
