@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import hashlib
 import os
 from pathlib import Path
 from typing import Dict, Optional
@@ -115,7 +116,7 @@ class NodeProcessor:
                 "class is only supported for inline SVG files (inline: true)"
             )
         else:
-            name = uuid.uuid4(path)
+            name = hashlib.sha256(path).hexdigest()
             target_path = self.target_dir / name
             with open(target_path, "wb") as f:
                 f.write(content)
