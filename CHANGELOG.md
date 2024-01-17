@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/yte-template-engine/ytml/compare/v1.0.0...v1.0.1) (2024-01-17)
+
+
+### Bug Fixes
+
+* use uuid for rendering files to disk ([c97985e](https://github.com/yte-template-engine/ytml/commit/c97985e7b66e25b00b38c1de1aec350ebd8c9617))
+
 ## [1.0.0](https://github.com/yte-template-engine/ytml/compare/v0.1.1...v1.0.0) (2024-01-15)
 
 
